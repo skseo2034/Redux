@@ -1,0 +1,49 @@
+<!DOCtype html>
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.0/redux.min.js"></script>
+    </head>
+    <body>
+        <style>
+            .container{
+                border: 5px solid black;
+                padding: 10px;
+            }
+        </style>
+
+        <div id="red"></div>
+
+        <script>
+            function reducer(state, action) {
+                console.log(state, action);
+                if (state === undefined) {
+                    return {color:'yellow'};
+                }
+
+                let newState;
+                if (action.type === 'CHNAGE_COLOR') {
+                    newState = Object.assign({}, state, {color:'red'});
+                }
+
+                return newState;
+            }
+
+            let store = Redux.legacy_createStore(reducer);
+            console.log(store.getState());
+
+
+            function red() {
+                const state = store.getState();
+                document.querySelector('#red').innerHTML = `
+                        <div class="container" id="component_red" style="background-color: ${state.color}">
+                            <hi>red</hi>
+                            <input type="button" value="fire" onclick="
+                                store.dispatch({type:'CHNAGE_COLOR', color:'red'});
+                            ">
+                        </div>
+                   `;
+            }
+            red();
+        </script>
+    </body>
+</html>

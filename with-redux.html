@@ -12,23 +12,30 @@
         </style>
 
         <div id="red"></div>
+        <div id="blue"></div>
+        <div id="green"></div>
 
         <script>
             function reducer(state, action) {
-                console.log(state, action);
+
                 if (state === undefined) {
                     return {color:'yellow'};
                 }
 
                 let newState;
                 if (action.type === 'CHNAGE_COLOR') {
-                    newState = Object.assign({}, state, {color:'red'});
+                    newState = Object.assign({}, state, {color:action.color});
                 }
+
+                console.log(action.type, action, state, newState);
 
                 return newState;
             }
 
-            let store = Redux.legacy_createStore(reducer);
+            let store = Redux.legacy_createStore(
+                reducer,
+                window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+            );
             console.log(store.getState());
 
 
@@ -43,7 +50,36 @@
                         </div>
                    `;
             }
+            store.subscribe(red);
             red();
+
+            function blue() {
+                const state = store.getState();
+                document.querySelector('#blue').innerHTML = `
+                        <div class="container" id="component_blue" style="background-color: ${state.color}">
+                            <hi>blue</hi>
+                            <input type="button" value="fire" onclick="
+                                store.dispatch({type:'CHNAGE_COLOR', color:'blue'});
+                            ">
+                        </div>
+                   `;
+            }
+            store.subscribe(blue);
+            blue();
+
+            function green() {
+                const state = store.getState();
+                document.querySelector('#green').innerHTML = `
+                        <div class="container" id="component_green" style="background-color: ${state.color}">
+                            <hi>green</hi>
+                            <input type="button" value="fire" onclick="
+                                store.dispatch({type:'CHNAGE_COLOR', color:'green'});
+                            ">
+                        </div>
+                   `;
+            }
+            store.subscribe(green);
+            green();
         </script>
     </body>
 </html>
